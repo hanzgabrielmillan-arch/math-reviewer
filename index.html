@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Math-reviewer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+  }
+  #player-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
+</head>
+<body>
+
+<div id="player-container">
+  <video id="vid" autoplay muted loop playsinline>
+    <source src="Rickroll.mp4" type="video/mp4">
+  </video>
+</div>
+
+<script>
+  const vid = document.getElementById('vid');
+
+  function unmute() {
+    vid.muted = false;
+    vid.play();
+    ['click', 'touchstart', 'keydown', 'scroll', 'mousemove'].forEach(evt =>
+      document.removeEventListener(evt, unmute)
+    );
+  }
+
+  ['click', 'touchstart', 'keydown', 'scroll', 'mousemove'].forEach(evt =>
+    document.addEventListener(evt, unmute, { once: true })
+  );
+</script>
+
+</body>
+</html>
