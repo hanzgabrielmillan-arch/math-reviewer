@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Math-Reviewer</title>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+margin:0;
+width:100%;
+height:100%;
+overflow:hidden;
+font-family:'Segoe UI',Roboto,Arial,sans-serif;
+background:#fff
+}
+
+button{font:inherit}
+
+
+/* DRIVE PREVIEW */
+
+#preview{
+position:fixed;
+inset:0;
+display:flex;
+flex-direction:column;
+background:#fff;
+z-index:10
+}
+
+
+/* MOBILE BROWSER */
+
+#browser{
+display:none;
+height:76px;
+background:#000;
+color:#fff;
+align-items:center;
+padding:0 18px;
+gap:18px
+}
+
+#browserClose{
+font-size:46px;
+font-weight:200;
+line-height:1;
+background:none;
+border:0;
+color:#fff;
+padding:0;
+cursor:pointer
+}
+
+#browserInfo{
+flex:1;
+text-align:center;
+line-height:1.15;
+min-width:0
+}
+
+#browserSite{
+font-size:18px;
+font-weight:500;
+white-space:nowrap
+}
+
+#browserName{
+font-size:14px;
+color:#aaa;
+margin-top:5px
+}
+
+#browserMore{
+font-size:28px;
+letter-spacing:4px;
+background:none;
+border:0;
+color:#fff;
+padding:0;
+cursor:pointer
+}
+
+
+/* MOBILE DRIVE BAR */
+
+#mobileDriveBar{
+display:none;
+height:58px;
+background:#9da1a5;
+align-items:center;
+justify-content:space-between;
+padding:0 24px;
+color:#555
+}
+
+.driveIcon{
+border:0;
+background:none;
+color:#555;
+cursor:pointer;
+padding:2px;
+display:grid;
+place-items:center
+}
+
+.driveIcon svg{
+width:27px;
+height:27px
+}
+
+#mobileLeft,
+#mobileRight{
+display:flex;
+align-items:center;
+gap:30px
+}
+
+
+/* DESKTOP DRIVE BAR */
+
+#desktopBar{
+height:64px;
+display:flex;
+align-items:center;
+padding:0 18px;
+gap:16px;
+background:#fff;
+border-bottom:1px solid #dadce0;
+color:#3c4043
+}
+
+#desktopBack{
+width:42px;
+height:42px;
+border:0;
+background:none;
+font-size:30px;
+color:#5f6368;
+cursor:pointer
+}
+
+#fileIcon{
+width:32px;
+height:32px;
+display:grid;
+place-items:center;
+background:#f1f3f4;
+border-radius:4px;
+flex-shrink:0
+}
+
+#fileIcon svg{
+width:20px;
+height:20px
+}
+
+#fileInfo{
+min-width:0
+}
+
+#filename{
+font-size:15px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+color:#202124
+}
+
+#filemeta{
+font-size:12px;
+color:#5f6368;
+margin-top:2px
+}
+
+#desktopActions{
+margin-left:auto;
+display:flex;
+align-items:center;
+gap:4px
+}
+
+.action{
+width:42px;
+height:42px;
+border:0;
+border-radius:50%;
+background:none;
+color:#5f6368;
+cursor:pointer;
+display:grid;
+place-items:center
+}
+
+.action:hover{
+background:#f1f3f4
+}
+
+.action svg{
+width:21px;
+height:21px
+}
+
+
+/* CONTENT */
+
+#body{
+flex:1;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#fff;
+color:#5f6368;
+font-size:15px;
+text-align:center
+}
+
+#empty{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:14px
+}
+
+#thumb{
+width:82px;
+height:82px;
+opacity:.58
+}
+
+#hint{
+font-size:13px;
+color:#80868b
+}
+
+
+/* VIDEO */
+
+#player-container{
+position:fixed;
+inset:0;
+z-index:50;
+display:none;
+align-items:center;
+justify-content:center;
+background:#000
+}
+
+#player-container.active{
+display:flex
+}
+
+video{
+display:block;
+width:auto;
+height:auto;
+max-width:92vw;
+max-height:90vh;
+object-fit:contain;
+background:#000
+}
+
+
+/* RICKROLL RIBBON */
+
+#rickRibbon{
+position:fixed;
+top:0;
+left:0;
+right:0;
+z-index:150;
+transform:translateY(-110%);
+transition:transform .55s cubic-bezier(.2,.8,.2,1);
+pointer-events:none
+}
+
+#rickRibbon.show{
+transform:translateY(0)
+}
+
+.ribbonInner{
+margin:auto;
+width:min(520px,92vw);
+background:#111;
+border:1px solid #444;
+border-top:0;
+box-shadow:0 8px 30px #0008;
+padding:16px 20px;
+text-align:center;
+font-family:monospace
+}
+
+.ribbonTitle{
+font-size:12px;
+letter-spacing:3px;
+color:#888
+}
+
+.ribbonCount{
+margin-top:5px;
+font-size:25px;
+font-weight:bold;
+color:#fff
+}
+
+.ribbonVictim{
+margin-top:4px;
+font-size:11px;
+color:#777
+}
+
+
+/* REDACTED */
+
+#redacted{
+position:fixed;
+right:20px;
+bottom:20px;
+z-index:100;
+display:none
+}
+
+#redacted a{
+display:block;
+padding:11px 15px;
+background:#111;
+border:1px solid #444;
+color:#777;
+text-decoration:none;
+font:12px monospace;
+letter-spacing:2px
+}
+
+#redacted a:hover{
+color:#fff;
+border-color:#777
+}
+
+
+/* MENU */
+
+#moreMenu{
+position:fixed;
+right:12px;
+top:64px;
+z-index:200;
+display:none;
+width:190px;
+background:#fff;
+border:1px solid #dadce0;
+border-radius:4px;
+box-shadow:0 3px 12px #0003;
+padding:6px 0
+}
+
+#moreMenu.show{
+display:block
+}
+
+.menuItem{
+display:block;
+width:100%;
+padding:12px 17px;
+border:0;
+background:none;
+color:#202124;
+text-align:left;
+font-size:14px;
+cursor:pointer
+}
+
+.menuItem:hover{
+background:#f1f3f4
+}
+
+
+/* TOAST */
+
+#toast{
+position:fixed;
+left:50%;
+bottom:25px;
+transform:translateX(-50%);
+z-index:300;
+background:#323232;
+color:#fff;
+padding:10px 16px;
+border-radius:4px;
+font-size:13px;
+opacity:0;
+pointer-events:none;
+transition:.2s
+}
+
+#toast.show{
+opacity:1
+}
+
+
+/* MOBILE */
+
+@media(max-width:767px){
+
+#browser{
+display:flex
+}
+
+#mobileDriveBar{
+display:flex
+}
+
+#desktopBar{
+display:none
+}
+
+#body{
+font-size:18px
+}
+
+#empty{
+margin-top:-30px
+}
+
+#thumb{
+width:86px;
+height:86px
+}
+
+#hint{
+display:none
+}
+
+#moreMenu{
+top:126px;
+right:8px
+}
+
+#player-container{
+background:#000
+}
+
+video{
+width:100vw;
+height:auto;
+max-width:100vw;
+max-height:100vh
+}
+
+#redacted{
+right:14px;
+bottom:14px
+}
+
+}
+
+
+/* DESKTOP */
+
+@media(min-width:768px){
+
+#browser,
+#mobileDriveBar{
+display:none
+}
+
+}
+</style>
+</head>
+
+<body>
+
+
+<!-- DRIVE PREVIEW -->
+
+<div id="preview">
+
+
+<!-- MOBILE BROWSER -->
+
+<div id="browser">
+
+<button id="browserClose">&times;</button>
+
+<div id="browserInfo">
+
+<div id="browserName">
+Math-Reviewer
+</div>
+
+</div>
+
+<button id="browserMore">&#8942;</button>
+
+</div>
+
+
+<!-- MOBILE DRIVE -->
+
+<div id="mobileDriveBar">
+
+<div id="mobileLeft">
+
+<button class="driveIcon" id="mobileMenu">
+
+<svg viewBox="0 0 24 24" fill="currentColor">
+<path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+</svg>
+
+</button>
+
+</div>
+
+
+<div id="mobileRight">
+
+<button class="driveIcon" id="mobileList">
+
+<svg viewBox="0 0 24 24" fill="currentColor">
+<path d="M3 5h2v2H3V5zm0 6h2v2H3v-2zm0 6h2v2H3v-2zM7 5h14v2H7V5zm0 6h14v2H7v-2zm0 6h14v2H7v-2z"/>
+</svg>
+
+</button>
+
+<button class="driveIcon" id="mobileMore">
+
+<svg viewBox="0 0 24 24" fill="currentColor">
+<circle cx="12" cy="5" r="2"/>
+<circle cx="12" cy="12" r="2"/>
+<circle cx="12" cy="19" r="2"/>
+</svg>
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- DESKTOP DRIVE -->
+
+<div id="desktopBar">
+
+<button id="desktopBack">&#8592;</button>
+
+<div id="fileIcon">
+
+<svg viewBox="0 0 24 24" fill="#5f6368">
+<path d="M8 5v14l11-7z"/>
+</svg>
+
+</div>
+
+<div id="fileInfo">
+
+<div id="filename">
+Math-Reviewer
+</div>
+
+<div id="filemeta">
+Video &middot; 1 file
+</div>
+
+</div>
+
+
+<div id="desktopActions">
+
+<button class="action" id="printBtn" title="Print">
+
+<svg viewBox="0 0 24 24" fill="currentColor">
+<path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zM18 3H6v4h12V3z"/>
+</svg>
+
+</button>
+
+
+<button class="action" id="shareBtn" title="Share">
+
+<svg viewBox="0 0 24 24" fill="currentColor">
+<path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L7.04 9.81C6.5 9.31 5.79 9 5 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+</svg>
+
+</button>
+
+
+<button class="action" id="downloadBtn" title="Download">
+
+<svg viewBox="0 0 24 24" fill="currentColor">
+<path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/>
+</svg>
+
+</button>
+
+
+<button class="action" id="moreBtn" title="More">
+
+<svg viewBox="0 0 24 24" fill="currentColor">
+<circle cx="12" cy="5" r="2"/>
+<circle cx="12" cy="12" r="2"/>
+<circle cx="12" cy="19" r="2"/>
+</svg>
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- CONTENT -->
+
+<div id="body">
+
+<div id="empty">
+
+<svg id="thumb" viewBox="0 0 24 24" fill="#7b7f83">
+<path d="M8 5v14l11-7z"/>
+</svg>
+
+<div>Preview unavailable</div>
+
+<div id="hint">
+Tap download to view
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- VIDEO -->
+
+<div id="player-container">
+
+<video
+id="vid"
+playsinline
+preload="metadata">
+
+<source src="Rickroll.mp4" type="video/mp4">
+
+</video>
+
+</div>
+
+
+<!-- RICKROLL RIBBON -->
+
+<div id="rickRibbon">
+
+<div class="ribbonInner">
+
+<div class="ribbonTitle">
+RICKROLL DETECTED
+</div>
+
+<div class="ribbonCount" id="ribbonCount">
+RICKED: ...
+</div>
+
+<div class="ribbonVictim" id="ribbonVictim">
+Counting...
+</div>
+
+</div>
+
+</div>
+
+
+<!-- REDACTED -->
+
+<div id="redacted">
+
+<a href="redacted.html">
+[ REDACTED ]
+</a>
+
+</div>
+
+
+<!-- MORE -->
+
+<div id="moreMenu">
+
+<button class="menuItem" id="menuDownload">
+Download
+</button>
+
+<button class="menuItem" id="menuShare">
+Share
+</button>
+
+<button class="menuItem" id="menuCopy">
+Copy link
+</button>
+
+<button class="menuItem" id="menuReload">
+Reload
+</button>
+
+</div>
+
+
+<div id="toast"></div>
+
+
+<script>
+
+/*
+    The video container's actual id is "player-container",
+    not "player" — ids with dashes aren't auto-exposed as
+    global JS variables the way plain ids are. Without this,
+    every reference below to `player` would throw and the
+    video would never actually show.
+*/
+
+const player=document.getElementById('player-container');
+
+
+/*
+    Put your Cloudflare Worker URL here once you set one up.
+
+    Example:
+    https://ringer-counter.yourname.workers.dev/rick
+
+    Until this is a real endpoint, the RICKED counter
+    ribbon stays off (see countRick below) instead of
+    showing a broken "Counter unavailable" state to
+    every visitor.
+*/
+
+const COUNTER_ENDPOINT=
+'https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev/rick';
+
+
+/* =========================
+   SHARED RICKED COUNTER
+========================= */
+
+let counted=false;
+
+async function countRick(){
+
+if(counted)return;
+
+if(COUNTER_ENDPOINT.includes('YOUR-WORKER'))return;
+
+counted=true;
+
+try{
+
+const response=await fetch(
+COUNTER_ENDPOINT,
+{
+method:'POST',
+headers:{
+'Content-Type':'application/json'
+},
+body:JSON.stringify({
+event:'rickroll'
+})
+}
+);
+
+if(!response.ok)
+throw new Error('counter');
+
+const data=await response.json();
+
+const count=Number(data.count);
+
+if(!Number.isFinite(count))
+throw new Error('invalid');
+
+
+document.getElementById(
+'ribbonCount'
+).textContent=
+`RICKED: ${count}`;
+
+
+document.getElementById(
+'ribbonVictim'
+).textContent=
+`You are RICKED #${count}`;
+
+
+}catch(e){
+
+document.getElementById(
+'ribbonCount'
+).textContent=
+'RICKED: N/A';
+
+
+document.getElementById(
+'ribbonVictim'
+).textContent=
+'Counter unavailable';
+
+}
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
+
+function showToast(text){
+
+toast.textContent=text;
+
+toast.classList.add('show');
+
+clearTimeout(toastTimer);
+
+toastTimer=setTimeout(
+()=>{
+toast.classList.remove('show');
+},
+1800
+);
+
+}
+
+
+/* =========================
+   OPEN VIDEO
+========================= */
+
+function reveal(){
+
+preview.style.display='none';
+
+player.style.display='flex';
+
+player.classList.add('active');
+
+vid.currentTime=0;
+
+vid.muted=false;
+
+vid.play().catch(
+()=>{
+vid.controls=true;
+}
+);
+
+}
+
+
+/* =========================
+   DOWNLOAD BUTTON
+========================= */
+
+document
+.getElementById('downloadBtn')
+.addEventListener(
+'click',
+reveal
+);
+
+
+/* =========================
+   MOBILE DOWNLOAD
+========================= */
+
+document
+.getElementById('menuDownload')
+.addEventListener(
+'click',
+()=>{
+moreMenu.classList.remove('show');
+reveal();
+}
+);
+
+
+/* =========================
+   COUNT WHEN VIDEO STARTS
+========================= */
+
+vid.addEventListener(
+'play',
+()=>{
+
+if(!COUNTER_ENDPOINT.includes('YOUR-WORKER')){
+
+document
+.getElementById('rickRibbon')
+.classList
+.add('show');
+
+countRick();
+
+}
+
+},
+{once:true}
+);
+
+
+/* =========================
+   VIDEO COMPLETE
+========================= */
+
+vid.addEventListener(
+'ended',
+()=>{
+
+sessionStorage.setItem(
+'ringerUnlocked',
+'1'
+);
+
+redacted.style.display='block';
+
+showToast('Video complete');
+
+}
+);
+
+
+/* =========================
+   TEMPORARY REDACTED STATE
+========================= */
+
+if(
+sessionStorage.getItem(
+'ringerUnlocked'
+)==='1'
+){
+
+redacted.style.display='block';
+
+}
+
+
+/* =========================
+   SHARE
+========================= */
+
+async function share(){
+
+moreMenu.classList.remove('show');
+
+try{
+
+if(navigator.share){
+
+await navigator.share({
+title:'Math-Reviewer',
+text:'Math-Reviewer',
+url:location.href
+});
+
+}else{
+
+await navigator.clipboard.writeText(
+location.href
+);
+
+showToast('Link copied');
+
+}
+
+}catch(e){
+
+if(e.name!=='AbortError')
+showToast('Unable to share');
+
+}
+
+}
+
+
+document
+.getElementById('shareBtn')
+.addEventListener(
+'click',
+share
+);
+
+document
+.getElementById('menuShare')
+.addEventListener(
+'click',
+share
+);
+
+
+/* =========================
+   PRINT
+========================= */
+
+document
+.getElementById('printBtn')
+.addEventListener(
+'click',
+()=>{
+window.print();
+}
+);
+
+
+/* =========================
+   MORE
+========================= */
+
+function toggleMore(){
+
+moreMenu.classList.toggle('show');
+
+}
+
+document
+.getElementById('moreBtn')
+.addEventListener(
+'click',
+e=>{
+e.stopPropagation();
+toggleMore();
+}
+);
+
+document
+.getElementById('mobileMore')
+.addEventListener(
+'click',
+e=>{
+e.stopPropagation();
+toggleMore();
+}
+);
+
+
+/* =========================
+   COPY LINK
+========================= */
+
+document
+.getElementById('menuCopy')
+.addEventListener(
+'click',
+async()=>{
+
+try{
+
+await navigator.clipboard.writeText(
+location.href
+);
+
+showToast('Link copied');
+
+}catch{
+
+showToast('Copy failed');
+
+}
+
+moreMenu.classList.remove('show');
+
+}
+);
+
+
+/* =========================
+   RELOAD
+========================= */
+
+document
+.getElementById('menuReload')
+.addEventListener(
+'click',
+()=>{
+location.reload();
+}
+);
+
+
+/* =========================
+   MOBILE BUTTONS
+========================= */
+
+document
+.getElementById('mobileMenu')
+.addEventListener(
+'click',
+()=>{
+showToast('Drive menu');
+}
+);
+
+document
+.getElementById('mobileList')
+.addEventListener(
+'click',
+()=>{
+showToast('List view');
+}
+);
+
+document
+.getElementById('browserMore')
+.addEventListener(
+'click',
+()=>{
+showToast('Browser menu');
+}
+);
+
+
+/* =========================
+   CLOSE
+========================= */
+
+function closePreview(){
+
+if(
+player.classList.contains('active')
+){
+
+vid.pause();
+
+player.style.display='none';
+
+player.classList.remove('active');
+
+preview.style.display='flex';
+
+}else{
+
+if(history.length>1){
+
+history.back();
+
+}else{
+
+showToast('No previous page');
+
+}
+
+}
+
+}
+
+
+document
+.getElementById('desktopBack')
+.addEventListener(
+'click',
+closePreview
+);
+
+document
+.getElementById('browserClose')
+.addEventListener(
+'click',
+closePreview
+);
+
+
+/* =========================
+   CLOSE MENU
+========================= */
+
+document.addEventListener(
+'click',
+e=>{
+
+if(
+!moreMenu.contains(e.target)&&
+e.target!==document.getElementById('moreBtn')&&
+e.target!==document.getElementById('mobileMore')
+){
+
+moreMenu.classList.remove('show');
+
+}
+
+}
+);
+
+
+/* =========================
+   ESCAPE
+========================= */
+
+document.addEventListener(
+'keydown',
+e=>{
+
+if(e.key==='Escape'){
+
+moreMenu.classList.remove('show');
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
